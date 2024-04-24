@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Analyzer and Editor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Text Analyzer and Editor</h1>
+    <form id="form">
+        <label for="text">Enter your text:</label><br>
+        <textarea id="text" rows="10" cols="50"></textarea><br>
+        <button type="button" onclick="analyzeText()">Analyze Text</button>
+        <label for="level">Select desired readability level:</label>
+        <select id="level">
+            <option value="basic">Basic</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+        </select><br>
+        <button type="button" onclick="improveText()">Improve Text</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        function analyzeText() {
+            var text = document.getElementById("text").value;
+            var words = text.match(/\b\w+\b/g).length;
+            var sentences = text.split(/[.!?]+/).length - 1;
+            var syllables = text.split(/[aeiouy]+/i).length - 1;
+            var score = 206.835 - 1.015 * (words / sentences) - 84.6 * (syllables / words);
+            score = Math.round(score * 10) / 10; // Round to one decimal place
+            document.getElementById("result").innerHTML = "<p>The Flesch-Kincaid score of the text is: " + score + "</p>";
+        }
+
+        function improveText() {
+            var text = document.getElementById("text").value;
+            var level = document.getElementById("level").value;
+            var improvedText = text; // Placeholder, you can implement your own logic here
+            switch (level) {
+                case "basic":
+                    improvedText = improveBasic(text);
+                    break;
+                case "intermediate":
+                    improvedText = improveIntermediate(text);
+                    break;
+                case "advanced":
+                    improvedText = improveAdvanced(text);
+                    break;
+                default:
+                    break;
+            }
+            document.getElementById("text").value = improvedText;
+        }
+
+        // Sample improvement functions (you can replace with your own logic)
+        function improveBasic(text) {
+            // Example: Capitalize first letter of each sentence
+            return text.replace(/(?:^|\. *)([a-z])/g, function (match, letter) {
+                return letter.toUpperCase();
+            });
+        }
+
+        function improveIntermediate(text) {
+            // Example: Replace common words with synonyms
+            var synonyms = {
+                "good": "excellent",
+                "bad": "poor",
+                "happy": "joyful"
+                // Add more synonyms as needed
+            };
+            return text.replace(/\b(\w+)\b/g, function (match, word) {
+                return synonyms[word.toLowerCase()] || word;
+            });
+        }
+
+        function improveAdvanced(text) {
+            // Example: Add more complex improvements
+            return text.toUpperCase();
+        }
+    </script>
+</body>
+</html>
